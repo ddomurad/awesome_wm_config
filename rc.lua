@@ -183,7 +183,13 @@ local w_cpu = lain.widget.cpu({
 -- Coretemp
 local w_temp = lain.widget.temp({
     settings = function()
-        widget:set_markup(markup.font(beautiful.font, "[TMEP:" .. coretemp_now .. "°C]"))
+        if coretemp_now > 45 then
+            widget:set_markup(markup.font(beautiful.font, markup("#ffa500", "[TMEP:" .. coretemp_now .. "°C]")))
+        elseif coretemp_now > 60 then
+            widget:set_markup(markup.font(beautiful.font, markup("#ff0000", "[TMEP:" .. coretemp_now .. "°C]")))
+        else
+            widget:set_markup(markup.font(beautiful.font, markup("#00ff00", "[TMEP:" .. coretemp_now .. "°C]")))
+        end
     end
 })
 
@@ -215,7 +221,7 @@ local w_volume = lain.widget.alsa({
         elseif volume_now.level >= 90 then
             widget:set_markup(markup.font(beautiful.font, markup("#ff0000", "[V:" .. volume_now.level .. "%]")))
         else
-            widget:set_markup(markup.font(beautiful.font, "[V:" .. volume_now.level .. "%]"))
+            widget:set_markup(markup.font(beautiful.font, markup("#00ff00", "[V:" .. volume_now.level .. "%]")))
         end
     end
 })
@@ -260,7 +266,7 @@ local w_fs = lain.widget.fs({
         if fs_now["/"].percentage > 90 then
             widget:set_markup(markup.font(beautiful.font,
                 markup("#ff0000", "[D:" .. string.format("%.2f", fs_now["/"].free) .. " " .. fs_now["/"].units .. "]")))
-        elseif fs_now["/"].percentage > 75 then
+        elseif fs_now["/"].percentage > 50 then
             widget:set_markup(markup.font(beautiful.font,
                 markup("#ffa500", "[D:" .. string.format("%.2f", fs_now["/"].free) .. " " .. fs_now["/"].units .. "]")))
         else
