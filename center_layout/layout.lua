@@ -36,10 +36,14 @@ local function do_center(param, first_column)
 
     local mwfact = t.master_width_factor
     local wa = param.workarea
-    local ncol = math.max(math.min(t.column_count, 2), 1)
+    local ncol = math.max(math.min(t.column_count, 2, #cls-1), 1)
     
     local master_total_width = wa.width*mwfact
     local master_width = master_total_width/nmaster
+
+    naughty.notify({ text = "nmaster" .. nmaster, timeout = 5 })
+    naughty.notify({ text = "nother" .. nother, timeout = 5 })
+    naughty.notify({ text = "ncol" .. ncol, timeout = 5 })
 
     local master_offset = 0
     
@@ -66,6 +70,8 @@ local function do_center(param, first_column)
 
     local fc_h_offset = 0
     local sc_h_offset = 0
+    
+    
 
     for k,c in ipairs(cls) do
         if k <= nmaster then --master
