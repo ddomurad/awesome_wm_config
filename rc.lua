@@ -6,6 +6,8 @@ pcall(require, "luarocks.loader")
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
+local lain  = require("lain")
+
 -- Widget and layout library
 local wibox = require("wibox")
 -- Theme handling library
@@ -13,7 +15,9 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
-local lain  = require("lain")
+
+-- Custom layout
+local center_layout = require("center_layout")
 
 local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
@@ -52,6 +56,7 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 --beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+--beautiful.init(gears.filesystem.get_themes_dir() .. "zenburn/theme.lua")
 beautiful.init(string.format("%s/.config/awesome/theme.lua", os.getenv("HOME")))
 
 -- This is used later as the default terminal and editor to run.
@@ -73,10 +78,15 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
+    center_layout.layout.start_right,
+    center_layout.layout,
     awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    --awful.layout.suit.fair.horizontal,
     awful.layout.suit.floating,
+    awful.layout.suit.magnifier,
+    
+    --awful.layout.suit.tile.left,
+    --awful.layout.suit.fair.horizontal,
+    
     --awful.layout.suit.spiral,
     --awful.layout.suit.tile.bottom,
     --awful.layout.suit.tile.top,
@@ -84,11 +94,11 @@ awful.layout.layouts = {
     -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.max,
     -- awful.layout.suit.max.fullscreen,
-    -- awful.layout.suit.magnifier,
     --awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
+    --center_layout.layout.three
 }
 -- }}}
 

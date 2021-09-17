@@ -99,17 +99,17 @@ local function do_center_right(param)
 end
 
 local center = {
-    name = "center",
+    name = "cntr.L",
     arrange = do_center_left
 }
 
 center.start_left = {
-    name = "center",
+    name = "cntr.L",
     arrange = do_center_left
 }
 
 center.start_right = {
-    name = "center",
+    name = "cntr.R",
     arrange = do_center_right
 }
 
