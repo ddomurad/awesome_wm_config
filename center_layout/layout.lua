@@ -41,9 +41,6 @@ local function do_center(param, first_column)
     local master_total_width = wa.width*mwfact
     local master_width = master_total_width/nmaster
 
-    naughty.notify({ text = "nmaster" .. nmaster, timeout = 5 })
-    naughty.notify({ text = "nother" .. nother, timeout = 5 })
-    naughty.notify({ text = "ncol" .. ncol, timeout = 5 })
 
     local master_offset = 0
     
