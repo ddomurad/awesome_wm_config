@@ -476,7 +476,11 @@ globalkeys = gears.table.join(
             end
         end,
         {description = "go back", group = "client"}),
-
+    -- Volume
+    awful.key({ modkey,           }, "=", function () awful.util.spawn("amixer set Master 10%+") end,
+              {description = "+10% Volue", group = "volume"}),
+    awful.key({ modkey,           }, "-", function () awful.util.spawn("amixer set Master 10%-") end,
+              {description = "-10% Volue", group = "volume"}),
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
@@ -511,9 +515,9 @@ globalkeys = gears.table.join(
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
-    awful.key({ modkey, "Control" }, "g",     function () awful.tag.incgap( 10, nil)    end,
+    awful.key({ modkey, "Control" }, "g",     function () awful.tag.incgap( 5, nil)    end,
               {description = "increase the useless gap", group = "layout"}),
-    awful.key({ modkey, "Shift" }, "g",     function () awful.tag.incgap( -10, nil)    end,
+    awful.key({ modkey, "Shift" }, "g",     function () awful.tag.incgap( -5, nil)    end,
               {description = "decrease the useless gap", group = "layout"}),
 
     awful.key({ modkey, "Control" }, "n",
@@ -780,3 +784,5 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+os.execute("xset r rate 200 25")
