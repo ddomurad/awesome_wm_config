@@ -60,8 +60,8 @@ local function do_center(param, first_column, overlap)
     
     for k,c in ipairs(cls) do
         if k <= nmaster then --master
-            set_client_pos(c, wa.x + master_offset - overlap_size, wa.y, master_width + overlap_size*2, wa.height, useless_gap)
-            master_offset = master_offset + master_width
+            set_client_pos(c, wa.x + master_offset - overlap_size, wa.y, master_width + overlap_size*2/nmaster, wa.height, useless_gap)
+            master_offset = master_offset + master_width + overlap_size*2/nmaster
         elseif k-nmaster <= fc_clients_cnt then
             if start_left then
                 set_client_pos(c, wa.x , wa.y + fc_h_offset, column_width+overlap_size, fc_height, useless_gap)
