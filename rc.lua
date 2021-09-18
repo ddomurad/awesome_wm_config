@@ -78,8 +78,8 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    center_layout.layout.start_right,
     center_layout.layout,
+    center_layout.layout.start_left_overlap,
     awful.layout.suit.tile,
     awful.layout.suit.floating,
     awful.layout.suit.magnifier,
@@ -334,16 +334,17 @@ local tasklist_buttons = gears.table.join(
 
 local function set_wallpaper(s)
     -- Wallpaper
-    -- if beautiful.wallpaper then
-    --     local wallpaper = beautiful.wallpaper
-    --     -- If wallpaper is a function, call it with the screen
-    --     if type(wallpaper) == "function" then
-    --         wallpaper = wallpaper(s)
-    --     end
-    --     gears.wallpaper.maximized(wallpaper, s, true)
-    -- end
-    --gears.wallpaper.set("#001619")
-    gears.wallpaper.set("#2e2a5d")
+    if beautiful.wallpaper then
+        local wallpaper = beautiful.wallpaper
+        -- If wallpaper is a function, call it with the screen
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
+    end
+    -- gears.wallpaper.set("#001619")
+    -- gears.wallpaper.set("#2e2a5d")
+    -- gears.wallpaper.set("#0f070f")
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
@@ -490,6 +491,7 @@ globalkeys = gears.table.join(
 
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
+
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
@@ -497,18 +499,22 @@ globalkeys = gears.table.join(
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
+    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, false) end,
               {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
+    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, false) end,
               {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
+    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, false)    end,
               {description = "increase the number of columns", group = "layout"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
+    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, false)    end,
               {description = "decrease the number of columns", group = "layout"}),
     awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
+    awful.key({ modkey, "Control" }, "g",     function () awful.tag.incgap( 10, nil)    end,
+              {description = "increase the useless gap", group = "layout"}),
+    awful.key({ modkey, "Shift" }, "g",     function () awful.tag.incgap( -10, nil)    end,
+              {description = "decrease the useless gap", group = "layout"}),
 
     awful.key({ modkey, "Control" }, "n",
               function ()
