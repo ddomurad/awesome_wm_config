@@ -55,8 +55,9 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
---beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
---beautiful.init(gears.filesystem.get_themes_dir() .. "zenburn/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "xresources/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "zenburn/theme.lua")
 beautiful.init(string.format("%s/.config/awesome/theme.lua", os.getenv("HOME")))
 
 -- This is used later as the default terminal and editor to run.
@@ -66,8 +67,10 @@ editor_cmd = terminal .. " -e " .. editor
 
 web_browser = "chromium"
 code_editor = "code"
+goland_ide = "goland.sh"
 mpsyt = 'terminator -e "/home/work/.local/bin/mpsyt"'
-file_explorer = "thunar"
+file_explorer = "ranger"
+locker = "lock"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -81,24 +84,23 @@ awful.layout.layouts = {
     center_layout.layout,
     center_layout.layout.start_left_overlap,
     awful.layout.suit.tile,
-    awful.layout.suit.floating,
-    awful.layout.suit.magnifier,
+    awful.layout.suit.spiral,
     
-    --awful.layout.suit.tile.left,
+    --center_layout.layout.three,
     --awful.layout.suit.fair.horizontal,
-    
-    --awful.layout.suit.spiral,
+    --awful.layout.suit.magnifier,
+    --awful.layout.suit.tile.left,
     --awful.layout.suit.tile.bottom,
     --awful.layout.suit.tile.top,
     --awful.layout.suit.fair,
-    -- awful.layout.suit.spiral.dwindle,
-    -- awful.layout.suit.max,
-    -- awful.layout.suit.max.fullscreen,
+    --awful.layout.suit.spiral.dwindle,
+    --awful.layout.suit.max,
+    --awful.layout.suit.max.fullscreen,
     --awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
-    -- awful.layout.suit.corner.sw,
-    -- awful.layout.suit.corner.se,
-    --center_layout.layout.three
+    --awful.layout.suit.corner.sw,
+    --awful.layout.suit.corner.se,
+    --awful.layout.suit.floating,
 }
 -- }}}
 
@@ -235,6 +237,7 @@ local w_volume = lain.widget.alsa({
         end
     end
 })
+
 w_volume.widget:buttons(awful.util.table.join(
     awful.button({}, 1, function ()
         awful.util.spawn("amixer set Master 25%+")
@@ -425,9 +428,9 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+    awful.button({ }, 3, function () mymainmenu:toggle() end)
+--    awful.button({ }, 4, awful.tag.viewnext),
+--    awful.button({ }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
@@ -481,23 +484,32 @@ globalkeys = gears.table.join(
               {description = "+10% Volue", group = "volume"}),
     awful.key({ modkey,           }, "-", function () awful.util.spawn("amixer set Master 10%-") end,
               {description = "-10% Volue", group = "volume"}),
+    -- Displays
+    awful.key({ modkey,           }, "F2", function () awful.util.spawn("xrandr --output HDMI-A-0 --mode 3440x1440 --output eDP --off") end,
+              {description = "Set laptop display", group = "display"}),
+    awful.key({ modkey,           }, "F3", function () awful.util.spawn("xrandr --output HDMI-A-0 --off --output eDP --auto") end,
+              {description = "Set HDMI display", group = "display"}),
+    awful.key({ modkey,           }, "F4", function () awful.util.spawn("xrandr --output HDMI-A-0 --mode 3440x1440 --output eDP --auto --right-of HDMI-A-0") end,
+              {description = "Switch to HDMI display", group = "display"}),
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey,           }, "c", function () awful.spawn(code_editor) end,
               {description = "open a code editor", group = "launcher"}),
-    awful.key({ modkey,           }, "e", function () awful.spawn(file_explorer) end,
-              {description = "open a code editor", group = "launcher"}),
+    awful.key({ modkey,           }, "g", function () awful.spawn(goland_ide) end,
+              {description = "open a goland ide", group = "launcher"}),
     awful.key({ modkey,           }, "b", function () awful.spawn(web_browser) end,
               {description = "open a web browser", group = "launcher"}),
+    awful.key({ modkey,           }, "q", function () awful.spawn(locker) end,
+              {description = "lock screen", group = "launcher"}),
     awful.key({ modkey,           }, "y", function () awful.spawn(mpsyt) end,
               {description = "open mpsyt", group = "launcher"}),
 
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
 
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit,
-              {description = "quit awesome", group = "awesome"}),
+    -- awful.key({ modkey, "Shift"   }, "q", awesome.quit,
+    --          {description = "quit awesome", group = "awesome"}),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
@@ -536,16 +548,16 @@ globalkeys = gears.table.join(
     awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
               {description = "run prompt", group = "launcher"}),
 
-    awful.key({ modkey }, "x",
-              function ()
-                  awful.prompt.run {
-                    prompt       = "Run Lua code: ",
-                    textbox      = awful.screen.focused().mypromptbox.widget,
-                    exe_callback = awful.util.eval,
-                    history_path = awful.util.get_cache_dir() .. "/history_eval"
-                  }
-              end,
-              {description = "lua execute prompt", group = "awesome"}),
+    -- awful.key({ modkey }, "x",
+    --           function ()
+    --               awful.prompt.run {
+    --                 prompt       = "Run Lua code: ",
+    --                 textbox      = awful.screen.focused().mypromptbox.widget,
+    --                 exe_callback = awful.util.eval,
+    --                 history_path = awful.util.get_cache_dir() .. "/history_eval"
+    --               }
+    --           end,
+    --           {description = "lua execute prompt", group = "awesome"}),
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
@@ -701,6 +713,7 @@ awful.rules.rules = {
         -- Note that the name property shown in xprop might be set slightly after creation of the client
         -- and the name shown there might not match defined rules here.
         name = {
+          "Volume Control",
           "Event Tester",  -- xev.
         },
         role = {
@@ -711,10 +724,21 @@ awful.rules.rules = {
       }, properties = { floating = true }},
 
     -- Add titlebars to normal clients and dialogs
-    { rule_any = {type = { "normal", "dialog" }
-      }, properties = { titlebars_enabled = true }
-    },
+    -- { 
+    --    rule_any = {type = { "normal", "dialog" }}, 
+    --    properties = { titlebars_enabled = true }
+    -- },
 
+    --ensure some windows are always spawned on screen 0
+    -- {
+    --     rule_any = {
+    --         name = {
+    --             "Slack*"
+    --         }
+    --     },
+    --     properties = { screen = 1 } ,
+    -- }
+    
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
