@@ -67,7 +67,6 @@ editor_cmd = terminal .. " -e " .. editor
 
 web_browser = "chromium"
 code_editor = "code"
-goland_ide = "goland.sh"
 mpsyt = 'terminator -e "/home/work/.local/bin/mpsyt"'
 file_explorer = "ranger"
 locker = "lock"
@@ -350,6 +349,15 @@ local function set_wallpaper(s)
     -- gears.wallpaper.set("#0f070f")
 end
 
+local function home_mouse()
+    if client.focus then
+        local geometry = client.focus:geometry()
+        local x = geometry.x + geometry.width/2
+        local y = geometry.y + geometry.height/2
+        mouse.coords({x = x, y = y}, true)
+    end
+end
+
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
@@ -496,7 +504,7 @@ globalkeys = gears.table.join(
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey,           }, "c", function () awful.spawn(code_editor) end,
               {description = "open a code editor", group = "launcher"}),
-    awful.key({ modkey,           }, "g", function () awful.spawn(goland_ide) end,
+    awful.key({ modkey,           }, ";", function () home_mouse() end,
               {description = "open a goland ide", group = "launcher"}),
     awful.key({ modkey,           }, "b", function () awful.spawn(web_browser) end,
               {description = "open a web browser", group = "launcher"}),
@@ -738,7 +746,7 @@ awful.rules.rules = {
     --     },
     --     properties = { screen = 1 } ,
     -- }
-    
+
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
@@ -801,9 +809,9 @@ client.connect_signal("request::titlebars", function(c)
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = false})
-end)
+-- client.connect_signal("mouse::enter", function(c)
+--     c:emit_signal("request::activate", "mouse_enter", {raise = false})
+-- end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
